@@ -1,15 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { WordType } from './../database/models';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-answers',
   templateUrl: './answer.component.html',
   styleUrls: ['./answer.component.scss']
 })
-export class AnswerComponent implements OnInit {
+export class AnswerComponent {
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+  @Input() title = '';
+  @Input() words: WordType[] = [];
 
 }

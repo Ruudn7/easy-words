@@ -1,3 +1,5 @@
+import { WordType } from './components/database/models';
+import { WordsService } from './services/words.service';
 import { Component } from '@angular/core';
 
 @Component({
@@ -6,5 +8,16 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'easy-words';
+
+  constructor(
+    private wordsService: WordsService
+  ) {}
+
+  get nouns(): WordType[] {
+    return this.wordsService.getNouns();
+  }
+
+  get verbs(): WordType[] {
+    return this.wordsService.getVerbs();
+  }
 }
