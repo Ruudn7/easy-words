@@ -1,23 +1,19 @@
-import { WordType } from './components/database/models';
-import { WordsService } from './services/words.service';
 import { Component } from '@angular/core';
+
+import { WordsService } from './services/words.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent{
 
   constructor(
     private wordsService: WordsService
   ) {}
 
-  get nouns(): WordType[] {
-    return this.wordsService.getNouns();
-  }
+  nouns = this.wordsService.getNouns();
+  verbs = this.wordsService.getVerbs();
 
-  get verbs(): WordType[] {
-    return this.wordsService.getVerbs();
-  }
 }

@@ -1,18 +1,18 @@
-import { WordType } from './../database/models';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+
 import { WordsService } from './../../services/words.service';
-import { Component, OnInit } from '@angular/core';
+import { WordType } from './../database/models';
 
 @Component({
   selector: 'app-question',
   templateUrl: './question.component.html',
   styleUrls: ['./question.component.scss']
 })
-export class QuestionComponent implements OnInit {
+export class QuestionComponent implements OnInit, OnDestroy {
 
-  word: undefined | WordType = {
-    word: '',
-    type: 0
-  };
+  subscription = new Subscription();
+  word: undefined |  WordType;
 
   constructor(
     private wordsService: WordsService
@@ -32,12 +32,16 @@ export class QuestionComponent implements OnInit {
     this.fetchWord();
   }
 
-  check(): void {
-    this.wordsService.check();
+  private fetchWord(): void {
+    this.subscription = this.wordsService.getWords().subscribe(
+      (array: WordType[]) => {
+        this.word = array.shift();
+      }
+    );
   }
 
-  private fetchWord(): void {
-    this.word = this.wordsService.getWords().shift();
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
 }
