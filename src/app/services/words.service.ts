@@ -1,42 +1,57 @@
-import { WORDS } from './../components/database/data-base';
 import { Injectable } from '@angular/core';
-import { WordType, Type } from '../components/database/models';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+import { Type, WordType } from '../components/database/models';
+import { WORDS } from './../components/database/data-base';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WordsService {
 
-  private words: WordType[] = [];
-  private nouns: WordType[] = [];
-  private verbs: WordType[] = [];
+  words$ = new BehaviorSubject<WordType[]>([]);
+  nouns$ = new Subject<WordType>();
+  verbs$ = new Subject<WordType>();
 
   constructor() {
-    this.words = WORDS;
+    setTimeout(() => {
+      this.words$.next(WORDS);
+    }, 0);
   }
 
-  getWords(): WordType[] {
-    return this.words;
+  getWords(): BehaviorSubject<WordType[]> {
+    return this.words$;
   }
 
-  getNouns(): WordType[] {
-    return this.nouns;
+  getNouns(): Observable<WordType> {
+    return this.nouns$.asObservable().pipe(
+      map(
+        (word: WordType) => {
+          word.correct = word.type === Type.NOUN;
+          return word;
+        }
+      )
+    );
   }
 
-  getVerbs(): WordType[] {
-    return this.verbs;
+  getVerbs(): Observable<WordType> {
+    return this.verbs$.asObservable().pipe(
+      map(
+        (word: WordType) => {
+          word.correct = word.type === Type.VERB;
+          return word;
+        }
+      )
+    );
   }
 
   addNouns( value: WordType ): void {
-      this.nouns.push(value);
+      this.nouns$.next(value);
   }
 
   addVerbs( value: WordType ): void {
-    this.verbs.push(value);
+    this.verbs$.next(value);
   }
 
-  check(): void {
-    this.nouns.map(word => (word.correct = word.type === Type.NOUN));
-    this.verbs.map(word => (word.correct = word.type === Type.VERB));
-  }
 }

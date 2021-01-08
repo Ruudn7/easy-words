@@ -1,5 +1,6 @@
+import { Component, Input } from '@angular/core';
+
 import { WordType } from './../database/models';
-import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-answers',
@@ -9,6 +10,12 @@ import { Component, Input, OnInit } from '@angular/core';
 export class AnswerComponent {
 
   @Input() title = '';
-  @Input() words: WordType[] = [];
+  words: WordType[] = [];
+
+  @Input() set word(word: WordType | null) {
+    if (word) {
+      this.words.push(word);
+    }
+  }
 
 }
